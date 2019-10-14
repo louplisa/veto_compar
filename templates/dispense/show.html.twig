@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dispense{% endblock %}
+
+{% block body %}
+    <h1>Dispense</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ dispense.id }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ dispense.price }}</td>
+            </tr>
+            <tr>
+                <th>Quality</th>
+                <td>{{ dispense.quality }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('dispense_index') }}">back to list</a>
+
+    <a href="{{ path('dispense_edit', {'id': dispense.id}) }}">edit</a>
+
+    {{ include('dispense/_delete_form.html.twig') }}
+{% endblock %}

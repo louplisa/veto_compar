@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Accueil{% endblock %}
+{% block stylesheets %}{{ parent() }}
+
+{% endblock %}
+{% block body %}{{ parent() }}
+    <div class="container" style="max-width: 20%; max-height: 20%; margin-top: 20px">
+<img src="{{ asset('images/logo-vetocompar.svg') }}" alt=""/>
+    </div>
+    <div class="container">
+        <h1 style="margin-top: 50px; text-align: center">Compare les tarifs et la qualité des soins vétérinaires</h1>
+    </div>
+{% endblock %}

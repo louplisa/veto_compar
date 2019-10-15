@@ -1,4 +1,28 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col col-sm-6">
+
+            {{ form_start(form) }}
+            <div class="mt-3">
+                {{ form_row(form.lastname) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.firstname) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.username) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.email) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.password) }}
+
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-success">Confirmer inscription</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>

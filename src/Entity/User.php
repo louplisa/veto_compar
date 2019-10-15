@@ -42,6 +42,13 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $registered_at;
+
+    private $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -107,6 +114,16 @@ class User implements UserInterface
         return $this;
     }
 
+    function getPlainPassword()
+    {
+        return $this->password;
+    }
+
+    function setPlainPassword($password)
+    {
+        $this->password = $password;
+    }
+
     /**
      * Returns the roles granted to the user.
      *
@@ -123,7 +140,9 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
     }
 
     /**
@@ -147,5 +166,17 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getRegisteredAt(): ?\DateTimeInterface
+    {
+        return $this->registered_at;
+    }
+
+    public function setRegisteredAt(\DateTimeInterface $registered_at): self
+    {
+        $this->registered_at = $registered_at;
+
+        return $this;
     }
 }

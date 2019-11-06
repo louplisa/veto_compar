@@ -1,0 +1,37 @@
+{% block body %}
+
+<div class="container">
+    {{ form_start(form) }}
+    <div class="form-row align-items-end">
+        <div class="col">
+            {{ form_row(form.zipCode) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.city) }}
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <button class="btn btn-primary">Rechercher</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+
+<div class="container mt-4">
+    <h1>Voir toutes nos cliniques</h1>
+
+    <div class="row">
+        {% for clinic in clinics %}
+            <div class="col-md-4">
+                {% include 'veterinary_clinic/_veterinary_clinic.html.twig' %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {{ knp_pagination_render(clinics) }}
+    </div>
+</div>
+
+{% endblock %}

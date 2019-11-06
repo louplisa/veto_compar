@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\VeterinaryClinic;
+use App\Entity\VeterinaryClinicSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * @method VeterinaryClinic|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +17,40 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class VeterinaryClinicRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, VeterinaryClinic::class);
+    }
+
+    /**
+     * @param VeterinaryClinicSearch $search
+     * @return Query
+     */
+    public function findAllVisibleQuery(VeterinaryClinicSearch $search): Query
+    {
+        $query = $this->findVisibleQuery();
+
+        if ($search->getZipCode()) {
+            $query = $query
+                ->andWhere('v.zip_code = :zipCode')
+                ->setParameter('zipCode', $search->getZipCode());
+        }
+        if ($search->getCity()) {
+            $query = $query
+                ->andWhere('v.city = :city')
+                ->setParameter('city', $search->getCity());
+        }
+
+
+
+        return $query->getQuery();
+
+    }
+
+    private function  findVisibleQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('v');
+
     }
 
     // /**

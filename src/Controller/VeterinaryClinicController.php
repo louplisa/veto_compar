@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\VeterinaryClinic;
+use App\Entity\VeterinaryClinicSearch;
+use App\Form\VeterinaryClinicSearchType;
 use App\Form\VeterinaryClinicType;
 use App\Repository\VeterinaryClinicRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class VeterinaryClinicController extends AbstractController
 {
     /**
+     * @var VeterinaryClinicRepository
+     */
+    private $repository;
+
+    public function __construct(VeterinaryClinicRepository $repository, ObjectManager $em)
+    {
+        $this->repository = $repository;
+        $this->em = $em;
+    }
+
+    /**
      * @Route("/", name="veterinary_clinic_index", methods={"GET"})
      */
     public function index(VeterinaryClinicRepository $veterinaryClinicRepository): Response
@@ -23,6 +38,31 @@ class VeterinaryClinicController extends AbstractController
         return $this->render('veterinary_clinic/index.html.twig', [
             'veterinary_clinics' => $veterinaryClinicRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/search", name="veterinary_clinic_search")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function clinicSearch(PaginatorInterface $paginator, Request $request): Response
+    {
+        $search = new VeterinaryClinicSearch();
+        $form = $this->createForm(VeterinaryClinicSearchType::class, $search);
+        $form->handleRequest($request);
+
+        $clinics = $paginator->paginate(
+            $this->repository->findAllVisibleQuery($search),
+            $request->query->getInt('page', 1),
+            12
+        );
+        return $this->render('veterinary_clinic/search.html.twig', [
+            'current_menu' => 'clinics',
+            'clinics' => $clinics,
+            'form' => $form->createView()
+        ]);
+
     }
 
     /**
@@ -83,7 +123,7 @@ class VeterinaryClinicController extends AbstractController
      */
     public function delete(Request $request, VeterinaryClinic $veterinaryClinic): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$veterinaryClinic->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $veterinaryClinic->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($veterinaryClinic);
             $entityManager->flush();

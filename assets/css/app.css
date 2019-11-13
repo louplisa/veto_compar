@@ -8,5 +8,12 @@ h1{
     margin-left: 3rem;
     font-size: 2rem;
     color: #2b9947;
+}
 
+h2{
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    margin-left: 2rem;
+    font-size: 2rem;
+    color: #2b9947;
 }

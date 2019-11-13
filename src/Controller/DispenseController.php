@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Dispense;
+use App\Entity\DispenseSearch;
+use App\Form\DispenseSearchType;
 use App\Form\DispenseType;
 use App\Repository\DispenseRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +20,47 @@ use Symfony\Component\Routing\Annotation\Route;
 class DispenseController extends AbstractController
 {
     /**
+     * @var DispenseRepository
+     */
+    private $repository;
+
+    public function __construct(DispenseRepository $repository, ObjectManager $em)
+    {
+        $this->repository = $repository;
+        $this->em = $em;
+    }
+
+    /**
      * @Route("/", name="dispense_index", methods={"GET"})
      */
     public function index(DispenseRepository $dispenseRepository): Response
     {
         return $this->render('dispense/index.html.twig', [
             'dispenses' => $dispenseRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/search", name="dispense_search")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function dispenseSearch(PaginatorInterface $paginator, Request $request): Response
+    {
+        $search = new DispenseSearch();
+        $form = $this->createForm(DispenseSearchType::class, $search);
+        $form->handleRequest($request);
+
+        $dispenses = $paginator->paginate(
+            $this->repository->findPriceByTreatment($search),
+            $request->query->getInt('page', 1),
+            12
+        );
+        return $this->render('dispense/search.html.twig', [
+            'current_menu' => 'dispenses',
+            'dispenses' => $dispenses,
+            'form' => $form->createView()
         ]);
     }
 
@@ -83,7 +122,7 @@ class DispenseController extends AbstractController
      */
     public function delete(Request $request, Dispense $dispense): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$dispense->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $dispense->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($dispense);
             $entityManager->flush();

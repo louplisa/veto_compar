@@ -23,16 +23,6 @@ class Pet
     private $espece;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $build;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $sex;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Dispense", mappedBy="pet", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $dispenses;
@@ -56,30 +46,6 @@ class Pet
     public function setEspece(string $espece): self
     {
         $this->espece = $espece;
-
-        return $this;
-    }
-
-    public function getBuild(): ?string
-    {
-        return $this->build;
-    }
-
-    public function setBuild(?string $build): self
-    {
-        $this->build = $build;
-
-        return $this;
-    }
-
-    public function getSex(): ?bool
-    {
-        return $this->sex;
-    }
-
-    public function setSex(?bool $sex): self
-    {
-        $this->sex = $sex;
 
         return $this;
     }

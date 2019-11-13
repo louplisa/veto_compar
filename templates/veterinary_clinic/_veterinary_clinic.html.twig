@@ -5,7 +5,14 @@
                 {{ clinic.name }}
 
         </h5>
-        <p class="card-text"> {{ clinic.city }} ({{ clinic.zipcode }})</p>
+        <p class="card-text">{{ clinic.streetnumber }} {{ clinic.indicestreetnumber }} {{ clinic.street }}</p>
+        <p class="card-text"> {{ clinic.complementary }}</p>
+        <p class="card-text">{{ clinic.zipcode }} {{ clinic.city }} </p>
+        <p class="card-text">Tél : {{ clinic.phone }} </p>
+        <p class="card-text"> Email : {{ clinic.email }}</p>
+        {% for dispense in dispenses %}
+        <p class="card-text">{{ clinic.dispense }}</p>
+        {% endfor %}
 
     </div>
 </div>

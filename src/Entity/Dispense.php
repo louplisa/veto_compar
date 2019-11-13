@@ -27,6 +27,11 @@ class Dispense
     private $quality;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $build;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\MedicalTreatment", inversedBy="dispenses", cascade={"persist"})
      * @ORM\JoinColumn(name="medical_treatment_id", referencedColumnName="id")
      */
@@ -72,6 +77,26 @@ class Dispense
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBuild()
+    {
+        return $this->build;
+    }
+
+    /**
+     * @param mixed $build
+     * @return Dispense
+     */
+    public function setBuild($build)
+    {
+        $this->build = $build;
+        return $this;
+    }
+
+
 
     /**
      * @return mixed

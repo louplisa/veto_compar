@@ -53,7 +53,7 @@ class VeterinaryClinicController extends AbstractController
         $form->handleRequest($request);
 
         $clinics = $paginator->paginate(
-            $this->repository->findAllVisibleQuery($search),
+            $this->repository->findClinicsByLocation($search),
             $request->query->getInt('page', 1),
             12
         );

@@ -26,7 +26,7 @@ class VeterinaryClinicRepository extends ServiceEntityRepository
      * @param VeterinaryClinicSearch $search
      * @return Query
      */
-    public function findAllVisibleQuery(VeterinaryClinicSearch $search): Query
+    public function findClinicsByLocation(VeterinaryClinicSearch $search): Query
     {
         $query = $this->findVisibleQuery();
 
@@ -42,12 +42,11 @@ class VeterinaryClinicRepository extends ServiceEntityRepository
         }
 
 
-
         return $query->getQuery();
 
     }
 
-    private function  findVisibleQuery(): QueryBuilder
+    private function findVisibleQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('v');
 

@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Dispense;
+use App\Entity\DispenseSearch;
+use App\Entity\VeterinaryClinicSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Dispense|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +21,28 @@ class DispenseRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Dispense::class);
+    }
+
+    public function findPriceByTreatment(DispenseSearch $search): Query
+    {
+        $query = $this->findVisibleQuery();
+
+        if ($search->getPet()) {
+            $query = $query
+                ->andWhere('d.pet = :pet')
+                ->setParameter('pet', $search->getPet());
+        }
+        if ($search->getMedicalTreatment()) {
+            $query = $query
+                ->andWhere('d.medical_treatment = :medical_treatment')
+                ->setParameter('medical_treatment', $search->getMedicalTreatment());
+        }
+        return $query->getQuery();
+    }
+
+    private function findVisibleQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('d');
     }
 
     // /**
